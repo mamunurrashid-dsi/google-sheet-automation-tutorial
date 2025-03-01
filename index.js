@@ -68,6 +68,14 @@ async function batchGetValues(ranges) {
     })
 }
 
+async function updateBatch(requests) {
+    await service.spreadsheets.batchUpdate({
+        spreadsheetId,
+        requestBody: {
+            requests
+        }
+    });
+}
 
 // let resource = {
 //     // majorDimension:"COLUMNS",
@@ -79,14 +87,14 @@ async function batchGetValues(ranges) {
 // };
 // updateValues("TeamInfo!A6", "USER_ENTERED", resource);
 
-let resource = {
-    values: [
-        ["Team Name", "Number of team members"],
-        ["eStatement", 10],
-        ["PD", 20]
-    ]
-};
-appendValues("TeamInfo!B4", "USER_ENTERED", resource);
+// let resource = {
+//     values: [
+//         ["Team Name", "Number of team members"],
+//         ["eStatement", 10],
+//         ["PD", 20]
+//     ]
+// };
+// appendValues("TeamInfo!B4", "USER_ENTERED", resource);
 
 // const data = [
 //     {
@@ -121,3 +129,46 @@ appendValues("TeamInfo!B4", "USER_ENTERED", resource);
 // ];
 
 // batchGetValues(ranges);
+
+const requests = []
+
+requests.push({
+    repeatCell: {
+        range: {
+            sheetId: 0,
+            startRowIndex: 0,
+            endRowIndex: 3,
+            startColumnIndex: 0,
+            endColumnIndex: 7
+        },
+        cell: {
+            userEnteredFormat: {
+                // wrapStrategy: "WRAP",
+                backgroundColor: {
+                    red: 1,
+                    green: 0.949,
+                    blue: 0.8
+                },
+                textFormat:{
+                    bold: true,
+                },
+                horizontalAlignment: "CENTER",
+                verticalAlignment: "TOP"
+            } 
+        },
+        fields: "userEnteredFormat.wrapStrategy,userEnteredFormat.backgroundColor,userEnteredFormat.textFormat.bold,userEnteredFormat.horizontalAlignment,userEnteredFormat.verticalAlignment"
+    }
+});
+
+requests.push({
+    autoResizeDimensions: {
+        dimensions: {
+        sheetId: 0,
+        dimension: 'COLUMNS', 
+        startIndex: 0,
+        endIndex: 7,
+        }
+    }
+});
+
+updateBatch(requests);
