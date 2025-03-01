@@ -33,7 +33,21 @@ async function batchUpdateValues(resource) {
     return result;
 }
 
+async function appendValues(range, valueInputOption, resource) {
+
+    const result = await service.spreadsheets.values.append({
+        spreadsheetId,
+        range,
+        valueInputOption,
+        insertDataOption: 'INSERT_ROWS',
+        resource
+    });
+    console.log('%d cells updated.', result.data.updatedCells);
+    return result;
+}
+
 async function getValues(range) {
+
     const result = await service.spreadsheets.values.get({
         spreadsheetId,
         range,
@@ -44,6 +58,7 @@ async function getValues(range) {
 }
 
 async function batchGetValues(ranges) {
+
     const result = await service.spreadsheets.values.batchGet({
         spreadsheetId,
         ranges
@@ -55,13 +70,23 @@ async function batchGetValues(ranges) {
 
 
 // let resource = {
+//     // majorDimension:"COLUMNS",
 //     values: [
 //         ["Team Name", "Number of team members"],
 //         ["eStatement", 10],
 //         ["PD", 20]
 //     ]
 // };
-// updateValues("TeamInfo!A1:B3", "USER_ENTERED", resource);
+// updateValues("TeamInfo!A6", "USER_ENTERED", resource);
+
+let resource = {
+    values: [
+        ["Team Name", "Number of team members"],
+        ["eStatement", 10],
+        ["PD", 20]
+    ]
+};
+appendValues("TeamInfo!B4", "USER_ENTERED", resource);
 
 // const data = [
 //     {
