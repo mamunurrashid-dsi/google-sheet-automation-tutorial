@@ -77,59 +77,63 @@ async function updateBatch(requests) {
     });
 }
 
-// let resource = {
-//     // majorDimension:"COLUMNS",
-//     values: [
-//         ["Team Name", "Number of team members"],
-//         ["eStatement", 10],
-//         ["PD", 20]
-//     ]
-// };
-// updateValues("TeamInfo!A6", "USER_ENTERED", resource);
+//update and append values starts ===============================
+let updateAndAppendValuesResource = {
+    // majorDimension:"COLUMNS",
+    values: [
+        ["Team Name", "Number of team members"],
+        ["eStatement", 10],
+        ["PD", 20]
+    ]
+};
+updateValues("TeamInfo!A6", "USER_ENTERED", updateAndAppendValuesResource);
 
-// let resource = {
-//     values: [
-//         ["Team Name", "Number of team members"],
-//         ["eStatement", 10],
-//         ["PD", 20]
-//     ]
-// };
-// appendValues("TeamInfo!B4", "USER_ENTERED", resource);
+appendValues("TeamInfo!B4", "USER_ENTERED", updateAndAppendValuesResource);
 
-// const data = [
-//     {
-//         range:"TeamInfo!D1:E3",
-//         values: [
-//             ["Location","Office Time"],
-//             ["House: 185", "12PM - 8PM"],
-//             ["House: 185", "12PM - 8PM"]
-//         ]
-//     },
-//     {
-//         range:"TeamInfo!G1:G3",
-//         values: [
-//             ["Type"],
-//             ["Onshore-Offshore"],
-//             ["Onshore-Offshore"]
-//         ]
-//     }
-// ]
+//update and append values ends ===============================
 
-// const resource = {
-//     data,
-//     valueInputOption:"USER_ENTERED"
-// }
-// batchUpdateValues(resource);
 
-// getValues("TeamInfo!A1:B3");
+//update batch values starts ===============================
+const data = [
+    {
+        range:"TeamInfo!D1:E3",
+        values: [
+            ["Location","Office Time"],
+            ["House: 185", "12PM - 8PM"],
+            ["House: 185", "12PM - 8PM"]
+        ]
+    },
+    {
+        range:"TeamInfo!G1:G3",
+        values: [
+            ["Type"],
+            ["Onshore-Offshore"],
+            ["Onshore-Offshore"]
+        ]
+    }
+]
 
-// const ranges = [
-//     "TeamInfo!A1:B1",
-//     "TeamInfo!A3:B3"
-// ];
+const resource = {
+    data,
+    valueInputOption:"USER_ENTERED"
+}
+batchUpdateValues(resource);
+//update batch values ends ===============================
 
-// batchGetValues(ranges);
+//get values starts ===============================
+getValues("TeamInfo!A1:B3");
+//get values ends ===============================
 
+//get batch values starts ===============================
+const ranges = [
+    "TeamInfo!A1:B1",
+    "TeamInfo!A3:B3"
+];
+
+batchGetValues(ranges);
+//get batch values ends ===============================
+
+//update batch starts =========================
 const requests = []
 
 requests.push({
@@ -172,3 +176,47 @@ requests.push({
 });
 
 updateBatch(requests);
+//update batch ends =========================
+
+//conditional formatting starts =========================
+const conditionalFormattingRequests = [];
+
+conditionalFormattingRequests.push({
+    addConditionalFormatRule: {
+        rule: {
+            ranges: [
+                {
+                    sheetId: 0,
+                    startRowIndex: 1,
+                    endRowIndex: 3,
+                    startColumnIndex: 1,
+                    endColumnIndex: 2
+                }
+            ],
+            booleanRule: {
+                condition: {
+                    type: "NUMBER_GREATER",
+                    values: [
+                        {
+                            userEnteredValue: "10"
+                        }
+                    ]
+                },
+                format: {
+                    textFormat: {
+                        italic: true
+                    },
+                    backgroundColor: {
+                        red: 1,
+                        green: 0.5,
+                        blue: 0
+                    }
+                }
+            }
+        },
+        index: 0
+    }
+});
+
+updateBatch(conditionalFormattingRequests);
+//conditional formatting ends =========================
