@@ -220,3 +220,20 @@ conditionalFormattingRequests.push({
 
 updateBatch(conditionalFormattingRequests);
 //conditional formatting ends =========================
+
+//add sheet starts =======================
+const addSheetRequest = [
+    {
+        addSheet: {
+            properties: {
+                title: "NewTestSheet",
+                gridProperties: {
+                    rowCount: 1000,
+                    columnCount: 35,
+                }
+            }
+        }
+    }
+]
+
+updateBatch(addSheetRequest);
